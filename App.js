@@ -11,7 +11,7 @@ export default function App() {
   };
   let content = <StartGameScreen startGame={startGameHandler} />;
   if (userNumber) {
-    content = <GameScreen />;
+    content = <GameScreen userChoice = {userNumber}/>;
   }
   //We can use navigation to load the right screen at the right time
   //but useState hook will be used here instead
