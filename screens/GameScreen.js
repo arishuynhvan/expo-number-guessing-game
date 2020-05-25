@@ -26,16 +26,22 @@ const GameScreen = (props) => {
   const [currentGuess, setCurrentGuess] = useState(
     generateRandomBetween(1, 99, props.userChoice)
   );
+  const [guessTurn, setGuessTurn] = useState(0); 
   //useRef keep variables survive after each re-rendering cycle
   //stored detached from component cycle
   //If their values are already initialized then variables will not be re-initialized
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
+  const {userChoice, onGameOver} = props;
+
+  //Run AFTER every rerender cycle
   useEffect(()=>{
-    if(currentGuess === props.userChoice){
-        
+    if(currentGuess === userChoice){
+      //Fire up a gameover screen
+      onGameOver(guessTurn);
+
     }
-  });
+  }, [currentGuess,userChoice, onGameOver]);
     
   const nextGuessHandler = direction => {
     //Handle when user lies :(
@@ -56,6 +62,7 @@ const GameScreen = (props) => {
     }
     const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess);
     setCurrentGuess(nextNumber);
+    setGuessTurn(currentTurns => currentTurns +1);
   };
   return (
     <View style={styles.screen}>
