@@ -13,6 +13,8 @@ The second app based on [React Native - Practical Guide 2020](https://www.udemy.
 - [ ] Explore [React Native Elements](https://github.com/react-native-training/react-native-elements) and [Native Base](https://github.com/GeekyAnts/NativeBase) for UI.
 - [x] Screen record demo
 - [ ] Learn react native navigation logic!
+- [ ] Create a global default style object to manage most of the reusable stylesheets
+- [ ] Proper async function for loading fonts only once during the 1st app render
 
 ## Demo
 

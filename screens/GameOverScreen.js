@@ -1,17 +1,27 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, Image } from "react-native";
 import Card from "../components/Card";
 import NumberContainer from "../components/NumberContainer";
 import Colors from "../constants/colors";
+import DefaultStyles from "../constants/default-styles";
 
 const GameOverScreen = (props) => {
   return (
     <View style={styles.screen}>
       <Card style={styles.confirmContainer}>
-        <Text>The correct number</Text>
+        <Text style={{ ...DefaultStyles.title, marginBottom: 10 }}>
+          The game is over!
+        </Text>
+        <View style={styles.imageContainer}>
+        <Image source={require("../assets/success.png")} style={styles.image} 
+          resizeMode="cover" 
+        />
+        </View>
+        <Text style={DefaultStyles.bodyText}>The correct number</Text>
         <NumberContainer>{props.selectedNumber}</NumberContainer>
-        <Text style={{marginBottom:10}}>The game is over!</Text>
-        <Text>Number of rounds:{props.roundNumber}</Text>
+        <Text style={{...DefaultStyles.bodyText, marginBottom:10}}>
+          Number of rounds: {props.roundNumber}
+        </Text>
         <Button
           onPress={props.onRestartGame}
           title={"RESTART GAME"}
@@ -35,6 +45,21 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     alignItems: "center",
   },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  imageContainer:{
+    width: 150,
+    height: 150,  
+    borderRadius:75, 
+    //to create a perfect circle, the borderRadius
+    //must be half of width (=== height)
+    borderWidth:3,
+    borderColor:'black',
+    overflow:'hidden',
+    marginVertical:10
+  }
 });
 
 export default GameOverScreen;

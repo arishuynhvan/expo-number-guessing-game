@@ -24,3 +24,17 @@ export default componentName
 ```js
 import componentName from './file';
 ```
+
+# UI issues
+
+## Font weight
+
+Available in react native, but not Expo. To use bold text in Expo, import the bold font of the family
+
+## Passing down style properties to children
+
+Basically, it's JS and not CSS, so this won't happen. Each component must be styled up on its own.
+
+## Using a font before it finishes loading
+
+Using loadAsync of AppLoading component (Expo only) doesn't guarantee the async function completes before the app renders.
