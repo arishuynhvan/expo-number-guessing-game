@@ -11,6 +11,7 @@ const GameOverScreen = (props) => {
         <Text>The correct number</Text>
         <NumberContainer>{props.selectedNumber}</NumberContainer>
         <Text style={{marginBottom:10}}>The game is over!</Text>
+        <Text>Number of rounds:{props.roundNumber}</Text>
         <Button
           onPress={props.onRestartGame}
           title={"RESTART GAME"}

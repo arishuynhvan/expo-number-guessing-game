@@ -29,7 +29,7 @@ export default function App() {
     //The game hasn't started or just restarted 
     content = <GameScreen userChoice = {userNumber} onGameOver = {gameOverHandler}/>;
   }else if (gameRounds>0){
-    content = <GameOverScreen onRestartGame ={reStartGameHandler} selectedNumber={userNumber}/>
+    content = <GameOverScreen onRestartGame ={reStartGameHandler} selectedNumber={userNumber} roundNumber = {gameRounds}/>
   }
   
   //We can use navigation to load the right screen at the right time
