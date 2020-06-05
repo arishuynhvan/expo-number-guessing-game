@@ -15,18 +15,26 @@ const GameOverScreen = (props) => {
         <View style={styles.imageContainer}>
           <Image
             fadeDuration={1000}
-            //source={require("../assets/success.png")}
+            source={require("../assets/success.png")}
             //For web images, must specify the dimensions
-            source={{ uri: "https://www.theuiaa.org/wp-content/uploads/2017/12/2018_banner.jpg" }}
+            //source={{ uri: "https://www.theuiaa.org/wp-content/uploads/2017/12/2018_banner.jpg" }}
             style={styles.image}
             resizeMode="cover"
           />
         </View>
-        <Text style={DefaultStyles.bodyText}>The correct number</Text>
-        <NumberContainer>{props.selectedNumber}</NumberContainer>
-        <Text style={{ ...DefaultStyles.bodyText, marginBottom: 10 }}>
-          Number of rounds: {props.roundNumber}
+        <Text style={DefaultStyles.bodyText}>
+          Your phone needed
+          <Text
+            //For a text component, if there're nested text children, the styles are passed down
+            //Text components don't use flexbox, unlike View
+            //Can set numberOfLines default prop and ellipsizeMode to truncate instead of wrapping
+            style={styles.highlight}
+          >
+            {props.roundNumber}
+          </Text>
+          rounds to guess the number
         </Text>
+        <NumberContainer>{props.selectedNumber}</NumberContainer>
         <Button
           onPress={props.onRestartGame}
           title={"RESTART GAME"}
@@ -64,6 +72,9 @@ const styles = StyleSheet.create({
     borderColor: "black",
     overflow: "hidden",
     marginVertical: 10,
+  },
+  highlight: {
+    color: Colors.primary,
   },
 });
 
