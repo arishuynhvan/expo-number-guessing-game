@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Alert,
+  ScrollView,
+} from "react-native";
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 import DefaultStyles from "../constants/default-styles";
@@ -21,15 +28,21 @@ const generateRandomBetween = (min, max, exclude) => {
   }
 };
 
+const renderListItem = (value, numOfRound) => (
+  <View key={value} style={styles.listItem}>
+    <Text>#{numOfRound}</Text>
+    <Text>{value}</Text>
+  </View>
+);
+
 const GameScreen = (props) => {
   //Generate the initial state and will be managed separately in
   //subsequent re-render cycles
   //currentGuess is of the computer
   //TODO: add userChoice prop to <GameScreen/> later in App.js
-  const [currentGuess, setCurrentGuess] = useState(
-    generateRandomBetween(1, 99, props.userChoice)
-  );
-  const [guessTurn, setGuessTurn] = useState(0);
+  const initialGuess = generateRandomBetween(1, 100, props.userChoice);
+  const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess]);
   //useRef keep variables survive after each re-rendering cycle
   //stored detached from component cycle
   //If their values are already initialized then variables will not be re-initialized
@@ -41,7 +54,7 @@ const GameScreen = (props) => {
   useEffect(() => {
     if (currentGuess === userChoice) {
       //Fire up a gameover screen
-      onGameOver(guessTurn);
+      onGameOver(pastGuesses.length);
     }
   }, [currentGuess, userChoice, onGameOver]);
 
@@ -63,7 +76,7 @@ const GameScreen = (props) => {
     if (direction === "lower") {
       currentHigh.current = currentGuess;
     } else {
-      currentLow.current = currentGuess;
+      currentLow.current = currentGuess + 1;
     }
     const nextNumber = generateRandomBetween(
       currentLow.current,
@@ -71,7 +84,7 @@ const GameScreen = (props) => {
       currentGuess
     );
     setCurrentGuess(nextNumber);
-    setGuessTurn((currentTurns) => currentTurns + 1);
+    setPastGuesses((curPastGuesses) => [nextNumber, ...curPastGuesses]);
   };
   return (
     <View style={styles.screen}>
@@ -81,12 +94,22 @@ const GameScreen = (props) => {
         <MainButton onPress={nextGuessHandler.bind(this, "lower")}>
           <Ionicons name="md-remove" size={24} color="white" />
         </MainButton>
-        <MainButton
-          onPress={nextGuessHandler.bind(this, "greater")}
-        >
+        <MainButton onPress={nextGuessHandler.bind(this, "greater")}>
           <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
       </Card>
+      <View style = {styles.list}>
+        <ScrollView //can't style like a flexbox
+        contentContainerStyle={styles.listContainer}
+        //this prop available for FlatList and ScrollView
+        //basically if styling a View wrapper doesn't work, style this
+        //ok to use ScrollView when there are <100 items to display at the same time
+        //since there won't be performance issues
+        //If there are too many items, use FlatList
+        >
+          {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length-index))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -103,6 +126,28 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 300,
     maxWidth: "80%",
+  },
+  list:{
+    width:"80%",
+    flex:1 //Must fill the entire View with the ScrollView
+          //for it to be scrollable on Android
+  },
+  listContainer:{
+    alignItems:'center',
+    justifyContent:'flex-end',
+    flexGrow:1 //able to grow and take as much space as it can get
+    //but it also keeps the normal behavior of the components 
+    //(e.g. scrolling for ScrollView, FlatList)
+  },
+  listItem: {
+    borderColor: "#ccc",
+    padding: 15,
+    borderWidth: 1,
+    marginVertical: 10,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: 'space-around',
+    width:"60%"
   },
 });
 
