@@ -13,13 +13,18 @@ const GameOverScreen = (props) => {
           The game is over!
         </Text>
         <View style={styles.imageContainer}>
-        <Image source={require("../assets/success.png")} style={styles.image} 
-          resizeMode="cover" 
-        />
+          <Image
+            fadeDuration={1000}
+            //source={require("../assets/success.png")}
+            //For web images, must specify the dimensions
+            source={{ uri: "https://www.theuiaa.org/wp-content/uploads/2017/12/2018_banner.jpg" }}
+            style={styles.image}
+            resizeMode="cover"
+          />
         </View>
         <Text style={DefaultStyles.bodyText}>The correct number</Text>
         <NumberContainer>{props.selectedNumber}</NumberContainer>
-        <Text style={{...DefaultStyles.bodyText, marginBottom:10}}>
+        <Text style={{ ...DefaultStyles.bodyText, marginBottom: 10 }}>
           Number of rounds: {props.roundNumber}
         </Text>
         <Button
@@ -49,17 +54,17 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  imageContainer:{
+  imageContainer: {
     width: 150,
-    height: 150,  
-    borderRadius:75, 
+    height: 150,
+    borderRadius: 75,
     //to create a perfect circle, the borderRadius
     //must be half of width (=== height)
-    borderWidth:3,
-    borderColor:'black',
-    overflow:'hidden',
-    marginVertical:10
-  }
+    borderWidth: 3,
+    borderColor: "black",
+    overflow: "hidden",
+    marginVertical: 10,
+  },
 });
 
 export default GameOverScreen;
