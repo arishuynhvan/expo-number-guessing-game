@@ -4,6 +4,7 @@ import Card from "../components/Card";
 import NumberContainer from "../components/NumberContainer";
 import Colors from "../constants/colors";
 import DefaultStyles from "../constants/default-styles";
+import MainButton from "../components/MainButton";
 
 const GameOverScreen = (props) => {
   return (
@@ -23,23 +24,23 @@ const GameOverScreen = (props) => {
           />
         </View>
         <Text style={DefaultStyles.bodyText}>
-          Your phone needed
+          Your phone needed {" "}
           <Text
+          //Must keep the space or else the words will clump together
             //For a text component, if there're nested text children, the styles are passed down
             //Text components don't use flexbox, unlike View
             //Can set numberOfLines default prop and ellipsizeMode to truncate instead of wrapping
             style={styles.highlight}
+
           >
-            {props.roundNumber}
+             {props.roundNumber} 
           </Text>
-          rounds to guess the number
+          {" "} rounds to guess the number
         </Text>
         <NumberContainer>{props.selectedNumber}</NumberContainer>
-        <Button
+        <MainButton
           onPress={props.onRestartGame}
-          title={"RESTART GAME"}
-          color={Colors.primary}
-        />
+        >RESTART GAME</MainButton>
       </Card>
     </View>
   );
