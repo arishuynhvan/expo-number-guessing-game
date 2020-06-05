@@ -1,4 +1,4 @@
-# Guess a number 
+# Guess a number Game
 
 ## Credit
 
@@ -15,7 +15,17 @@ The second app based on [React Native - Practical Guide 2020](https://www.udemy.
 - [ ] Learn react native navigation logic!
 - [ ] Create a global default style object to manage most of the reusable stylesheets
 - [ ] Proper async function for loading fonts only once during the 1st app render
+- [ ] Test out UI Component Libraries
 
 ## Demo
 
 ![guess number game gif](img/20200525_105315.gif)
+
+## UI Component Libraries
+
+- React Native Paper
+- React Native Elements
+- Native Base
+- React Native Material UI
+- React Native UI Kitten
+- React Native iOS Kit
