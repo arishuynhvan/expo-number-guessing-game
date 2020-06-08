@@ -6,6 +6,7 @@ import {
   Button,
   Alert,
   ScrollView,
+  FlatList,
 } from "react-native";
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -27,11 +28,13 @@ const generateRandomBetween = (min, max, exclude) => {
     return randNum;
   }
 };
-
-const renderListItem = (value, numOfRound) => (
-  <View key={value} style={styles.listItem}>
-    <Text>#{numOfRound}</Text>
-    <Text>{value}</Text>
+//itemData passed into this function has default keys: index, item
+//as the itemData passed into this function by FlatList is an object - an item from data
+//summary: renderItem({ item, index, separators });
+const renderListItem = (numOfRound, itemData) => (
+  <View style={styles.listItem}>
+    <Text>#{numOfRound - itemData.index}</Text>
+    <Text>{itemData.item}</Text>
   </View>
 );
 
@@ -98,8 +101,8 @@ const GameScreen = (props) => {
           <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
       </Card>
-      <View style = {styles.list}>
-        <ScrollView //can't style like a flexbox
+      <View style={styles.list}>
+        {/*<ScrollView //can't style like a flexbox
         contentContainerStyle={styles.listContainer}
         //this prop available for FlatList and ScrollView
         //basically if styling a View wrapper doesn't work, style this
@@ -108,7 +111,13 @@ const GameScreen = (props) => {
         //If there are too many items, use FlatList
         >
           {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length-index))}
-        </ScrollView>
+        </ScrollView>*/}
+        <FlatList
+          contentContainerStyle={styles.listContainer}
+          keyExtractor={(item) => item.toString()}
+          data={pastGuesses}
+          renderItem={renderListItem.bind(this, pastGuesses.length)}
+        />
       </View>
     </View>
   );
@@ -127,16 +136,16 @@ const styles = StyleSheet.create({
     width: 300,
     maxWidth: "80%",
   },
-  list:{
-    width:"80%",
-    flex:1 //Must fill the entire View with the ScrollView
-          //for it to be scrollable on Android
+  list: {
+    width: "80%",
+    flex: 1, //Must fill the entire View with the ScrollView
+    //for it to be scrollable on Android
   },
-  listContainer:{
-    alignItems:'center',
-    justifyContent:'flex-end',
-    flexGrow:1 //able to grow and take as much space as it can get
-    //but it also keeps the normal behavior of the components 
+  listContainer: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+    flexGrow: 1, //able to grow and take as much space as it can get
+    //but it also keeps the normal behavior of the components
     //(e.g. scrolling for ScrollView, FlatList)
   },
   listItem: {
@@ -146,8 +155,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "white",
     flexDirection: "row",
-    justifyContent: 'space-around',
-    width:"60%"
+    justifyContent: "space-around",
+    width: "60%",
   },
 });
 
