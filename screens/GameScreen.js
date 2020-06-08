@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
   },
   list: {
-    width: "80%",
+    width: "60%",
     flex: 1, //Must fill the entire View with the ScrollView
     //for it to be scrollable on Android
   },
   listContainer: {
-    alignItems: "center",
+    //alignItems: "center",
     justifyContent: "flex-end",
     flexGrow: 1, //able to grow and take as much space as it can get
     //but it also keeps the normal behavior of the components
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-around",
-    width: "60%",
+    width: "100%",
   },
 });
 
