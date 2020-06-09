@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
 
@@ -65,10 +65,11 @@ export default function App() {
   //We can use navigation to load the right screen at the right time
   //but useState hook will be used here instead
   return (
-    <View style={styles.screen}>
-      <Header title="Guess a Number" />
-      {content}
-    </View>
+    // SafeAreaView can be the topmost view to avoid iOS notch and physical buttons
+    <SafeAreaView style={styles.screen}>
+        <Header title="Guess a Number" />
+        {content}
+    </SafeAreaView>
   );
 }
 
