@@ -17,6 +17,8 @@ import Input from "../components/Input";
 import NumberContainer from "../components/NumberContainer";
 import MainButton from "../components/MainButton";
 
+//TODO: Fix buttons overstretched in portrait mode after pressing confirm in landscape mode
+
 const StartGameScreen = (props) => {
   const [enteredNumber, setEnteredNumber] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);

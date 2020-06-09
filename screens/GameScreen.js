@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Alert,
   FlatList,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -45,6 +45,12 @@ const GameScreen = (props) => {
   const initialGuess = generateRandomBetween(1, 100, props.userChoice);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [pastGuesses, setPastGuesses] = useState([initialGuess]);
+  const [currentDeviceWidth, setCurrentDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [currentDeviceHeight, setCurrentDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
   //useRef keep variables survive after each re-rendering cycle
   //stored detached from component cycle
   //If their values are already initialized then variables will not be re-initialized
@@ -59,6 +65,18 @@ const GameScreen = (props) => {
       onGameOver(pastGuesses.length);
     }
   }, [currentGuess, userChoice, onGameOver]);
+
+  //Update when the dimensions change
+  useEffect(() => {
+    const updateLayout = () => {
+      setCurrentDeviceWidth(Dimensions.get("window").width);
+      setCurrentDeviceWidth(Dimensions.get("window").height);
+    };
+    Dimensions.addEventListener("change", updateLayout);
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
 
   const nextGuessHandler = (direction) => {
     //Handle when user lies :(
@@ -88,20 +106,21 @@ const GameScreen = (props) => {
     setCurrentGuess(nextNumber);
     setPastGuesses((curPastGuesses) => [nextNumber, ...curPastGuesses]);
   };
-  return (
-    <View style={styles.screen}>
-      <Text style={DefaultStyles.title}>Opponent's Guess</Text>
-      <NumberContainer>{currentGuess}</NumberContainer>
-      <Card style={styles.buttonContainer}>
+  if (currentDeviceHeight < 500) {
+    return (
+      <View style={styles.screen}>
+        <Text style={DefaultStyles.title}>Opponent's Guess</Text>
+        <View style={styles.landscapeControls}>
         <MainButton onPress={nextGuessHandler.bind(this, "lower")}>
           <Ionicons name="md-remove" size={24} color="white" />
         </MainButton>
+        <NumberContainer>{currentGuess}</NumberContainer>
         <MainButton onPress={nextGuessHandler.bind(this, "greater")}>
           <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
-      </Card>
-      <View style={styles.list}>
-        {/*<ScrollView //can't style like a flexbox
+        </View>
+        <View style={styles.list}>
+          {/*<ScrollView //can't style like a flexbox
         contentContainerStyle={styles.listContainer}
         //this prop available for FlatList and ScrollView
         //basically if styling a View wrapper doesn't work, style this
@@ -111,15 +130,48 @@ const GameScreen = (props) => {
         >
           {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length-index))}
         </ScrollView>*/}
-        <FlatList
-          contentContainerStyle={styles.listContainer}
-          keyExtractor={(item) => item.toString()}
-          data={pastGuesses}
-          renderItem={renderListItem.bind(this, pastGuesses.length)}
-        />
+          <FlatList
+            contentContainerStyle={styles.listContainer}
+            keyExtractor={(item) => item.toString()}
+            data={pastGuesses}
+            renderItem={renderListItem.bind(this, pastGuesses.length)}
+          />
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+    return (
+      <View style={styles.screen}>
+        <Text style={DefaultStyles.title}>Opponent's Guess</Text>
+        <NumberContainer>{currentGuess}</NumberContainer>
+        <Card style={styles.buttonContainer}>
+          <MainButton onPress={nextGuessHandler.bind(this, "lower")}>
+            <Ionicons name="md-remove" size={24} color="white" />
+          </MainButton>
+          <MainButton onPress={nextGuessHandler.bind(this, "greater")}>
+            <Ionicons name="md-add" size={24} color="white" />
+          </MainButton>
+        </Card>
+        <View style={styles.list}>
+          {/*<ScrollView //can't style like a flexbox
+        contentContainerStyle={styles.listContainer}
+        //this prop available for FlatList and ScrollView
+        //basically if styling a View wrapper doesn't work, style this
+        //ok to use ScrollView when there are <100 items to display at the same time
+        //since there won't be performance issues
+        //If there are too many items, use FlatList
+        >
+          {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length-index))}
+        </ScrollView>*/}
+          <FlatList
+            contentContainerStyle={styles.listContainer}
+            keyExtractor={(item) => item.toString()}
+            data={pastGuesses}
+            renderItem={renderListItem.bind(this, pastGuesses.length)}
+          />
+        </View>
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -128,15 +180,21 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
   },
+  landscapeControls:{
+    flexDirection: 'row',
+    justifyContent:'space-around',
+    width:'80%',
+    alignItems: 'center'
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: Dimensions.get('window').height>600 ? 20:5,
+    marginTop: Dimensions.get("window").height > 600 ? 20 : 5,
     width: 300,
     maxWidth: "80%",
   },
   list: {
-    width: Dimensions.get('window').width>350 ? "60%":"80%",
+    width: Dimensions.get("window").width > 350 ? "60%" : "80%",
     flex: 1, //Must fill the entire View with the ScrollView
     //for it to be scrollable on Android
   },
