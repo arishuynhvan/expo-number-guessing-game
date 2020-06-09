@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import {
   View,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
   Alert,
   Dimensions, //an object to know how many pixels available in each dimension
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import Card from "../components/Card";
 import Colors from "../constants/colors";
@@ -17,12 +17,27 @@ import Input from "../components/Input";
 import NumberContainer from "../components/NumberContainer";
 import MainButton from "../components/MainButton";
 
-//TODO: Fix buttons overstretched in portrait mode after pressing confirm in landscape mode
-
 const StartGameScreen = (props) => {
   const [enteredNumber, setEnteredNumber] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
+  const [buttonWidth, setButtonWidth] = useState(
+    Dimensions.get("window").width / 4
+  );
+
+  //This should run every rerender cycle
+  //The cleanup function makes sure that only 1 eventListener is 
+  //present at a time
+  useEffect(()=>{
+    const updateLayout = () => {
+      setButtonWidth(Dimensions.get("window").width / 4);
+    };
+  
+    Dimensions.addEventListener('change', updateLayout);
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout);
+    }
+  })
 
   const numberInputHandler = (inputText) => {
     //replace anything that's not a number with an empty string
@@ -66,47 +81,50 @@ const StartGameScreen = (props) => {
     //Wrap the entire screen with TouchableWithoutFeedback component to listen to screen tapping
     //In this case, we'll dismiss the keyboard onPress
     <ScrollView>
-    <KeyboardAvoidingView behavior = 'padding' verticalKeyboardOffSet = {30}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.screen}>
-          <Text style={styles.title}>Start a New Game!</Text>
-          <Card style={styles.inputContainer}>
-            <Text>Select a Number</Text>
-            <Input
-              blurOnSubmit
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="number-pad" //no decimal point in iOS, but it's still in Android
-              maxLength={2}
-              style={styles.input}
-              onChangeText={numberInputHandler}
-              value={enteredNumber}
-            />
-            <View style={styles.buttonContainer}>
-              <View style={styles.button}>
-                <Button
-                  title="Reset"
-                  onPress={resetInputHandler}
-                  color={Colors.accent}
-                />
+      <KeyboardAvoidingView behavior="padding" verticalKeyboardOffSet={30}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.screen}>
+            <Text style={styles.title}>Start a New Game!</Text>
+            <Card style={styles.inputContainer}>
+              <Text>Select a Number</Text>
+              <Input
+                blurOnSubmit
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="number-pad" //no decimal point in iOS, but it's still in Android
+                maxLength={2}
+                style={styles.input}
+                onChangeText={numberInputHandler}
+                value={enteredNumber}
+              />
+              <View style={styles.buttonContainer}>
+                <View style={{width:buttonWidth}}>
+                  <Button
+                    title="Reset"
+                    onPress={resetInputHandler}
+                    color={Colors.accent}
+                  />
+                </View>
+                <View style={{width: buttonWidth}}>
+                  <Button
+                    title="Confirm"
+                    onPress={confirmInputHandler}
+                    color={Colors.primary}
+                  />
+                </View>
               </View>
-              <View style={styles.button}>
-                <Button
-                  title="Confirm"
-                  onPress={confirmInputHandler}
-                  color={Colors.primary}
-                />
-              </View>
-            </View>
-          </Card>
-          {confirmedOutput}
-        </View>
-      </TouchableWithoutFeedback>
+            </Card>
+            {confirmedOutput}
+          </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </ScrollView>
   );
 };
 
+//All calculations in StyleSheet object only run once in the app cycle (start)
+//Variables inside component will not be in the scope of StyleSheet object, 
+//so any dynamically changed style must be assigned to the inline styles
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -132,9 +150,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 15,
   },
+  /*
   button: {
     width: Dimensions.get("window").width / 4,
-  },
+  },*/
   confirmContainer: {
     padding: 30,
     marginTop: 50,
