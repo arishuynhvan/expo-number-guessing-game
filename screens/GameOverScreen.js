@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  ScrollView,
 } from "react-native";
 import Card from "../components/Card";
 import NumberContainer from "../components/NumberContainer";
@@ -14,6 +15,7 @@ import MainButton from "../components/MainButton";
 
 const GameOverScreen = (props) => {
   return (
+    <ScrollView>
       <View style={styles.screen}>
         <Card style={styles.confirmContainer}>
           <Text style={{ ...DefaultStyles.title, marginBottom: 10 }}>
@@ -46,6 +48,7 @@ const GameOverScreen = (props) => {
           <MainButton onPress={props.onRestartGame}>RESTART GAME</MainButton>
         </Card>
       </View>
+    </ScrollView>
   );
 };
 
